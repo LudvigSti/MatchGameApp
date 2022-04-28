@@ -40,6 +40,9 @@
     <div class="row">
         <h2>Time: @timeDisplay</h2>
     </div>
+    <div class="row">
+        <button @onclick="@(() => startButton())">Start spill!</button>
+    </div>
 </div>
 
 @code {
@@ -112,8 +115,8 @@
             .OrderBy(item => random.Next())
             .ToList();
         matchesFound = 0;
-        tenthsOfSecondsElapsed = 0;
-        
+        tenthsOfSecondsElapsed = 200;
+
     }
 
     string lastAnimalFound = string.Empty;
@@ -121,40 +124,57 @@
 
     private void ButtonClick(string animal, string animalDescription)
     {
-        if (lastAnimalFound == string.Empty)
+        if (timer.Enabled)
         {
-            lastAnimalFound = animal;
-            lastDescription = animalDescription;
 
-            timer.Start();
-        }
-        else if ((lastAnimalFound == animal) && (animalDescription != lastDescription))
-        {
-            lastAnimalFound = string.Empty;
-            shuffledAnimals = shuffledAnimals
-                .Select(a => a.Replace(animal, string.Empty))
-                .ToList();
-            matchesFound++;
-            if (matchesFound == 8)
+            if (lastAnimalFound == string.Empty)
             {
-                timer.Stop();
-                timeDisplay += " - Play Again?";
-                SetUpGame();
+                lastAnimalFound = animal;
+                lastDescription = animalDescription;
+
+            }
+            else if ((lastAnimalFound == animal) && (animalDescription != lastDescription))
+            {
+                lastAnimalFound = string.Empty;
+                shuffledAnimals = shuffledAnimals
+                    .Select(a => a.Replace(animal, string.Empty))
+                    .ToList();
+                matchesFound++;
+                if (matchesFound == 8)
+                {
+                    timer.Stop();
+                    timeDisplay += " You Won! - Play Again?";
+                    SetUpGame();
+                }
+            }
+            else
+            {
+                lastAnimalFound = string.Empty;
             }
         }
-        else
-        {
-            lastAnimalFound = string.Empty;
-        }
+    }
+
+    private void startButton()
+    {
+        timer.Start();
     }
 
     private void Timer_Tick(Object source, ElapsedEventArgs e)
     {
         InvokeAsync(() =>
         {
-            tenthsOfSecondsElapsed++;
-            timeDisplay = (tenthsOfSecondsElapsed / 10F)
-                .ToString("0.0s");
+            if (tenthsOfSecondsElapsed > 0)
+            {
+                tenthsOfSecondsElapsed--;
+                timeDisplay = (tenthsOfSecondsElapsed / 10F).ToString("0.0s");
+
+            }
+            else
+            {
+                timer.Stop();
+                timeDisplay += " You Lost! - Play Again?";
+                SetUpGame();
+            }
             StateHasChanged();
         });
     }
