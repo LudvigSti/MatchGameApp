@@ -21,29 +21,29 @@
 
 
 <div class="container">
-    <div class="row">
-        @for (var animalNumber = 0; animalNumber < shuffledAnimals.Count; animalNumber++)
+    <div class="row"> //emoji class
+        @for (var emojiNumber = 0; emojiNumber < shuffledEmojis.Count; emojiNumber++)
         {
-            var animal = shuffledAnimals[animalNumber];
-            var uniqueDescription = $"Button #{animalNumber}";
+            var emoji = shuffledEmojis[emojiNumber];
+            var uniqueDescription = $"Button #{emojiNumber}";
             <div class='col-3'>
-                <button @onclick="@(() => ButtonClick(animal, uniqueDescription))" 
+                <button @onclick="@(() => ButtonClick(emoji, uniqueDescription))" 
                     type="button" class='btn btn-outline-dark'>
-                    <h1>@animal</h1>
+                    <h1>@emoji</h1>
                 </button>
             </div>
         }
     </div>
-    <div class="row">
+    <div class="row"> //viser matches found
         <h2>Matches found: @matchesFound</h2>
     </div>
-    <div class="row">
+    <div class="row"> //viser tid
         <h2>Time: @timeDisplay</h2>
     </div>
-    <div>
+    <div class="row"> //viser om man vant eller tapte
         <h2>@resultatMelding</h2>
     </div>
-    <div class="row">
+    <div class="row"> //start spill knapp
         <button @onclick="@(() => startButton())">Start spill!</button>
     </div>
 </div>
@@ -84,7 +84,7 @@
         "🍇","🍇",
     };
 
-    List<string> shuffledAnimals = new List<string>();
+    List<string> shuffledEmojis = new List<string>();
     List<string> pickedList = new List<string>();
     int matchesFound = 0;
     int randomListe = 0;
@@ -93,14 +93,14 @@
     string timeDisplay;
     string resultatMelding;
 
-    protected override void OnInitialized()
+    protected override void OnInitialized() //Oppstart av programmet
     {
         timer = new Timer(100);
         timer.Elapsed += Timer_Tick;
         SetUpGame();
     }
 
-    private void SetUpGame()
+    private void SetUpGame() //Setter opp programmet, gjøres på oppstart og slutten av hvert game
     {
         Random random = new Random();
 
@@ -115,7 +115,7 @@
             pickedList = fruitEmoji;
         }
 
-        shuffledAnimals = pickedList
+        shuffledEmojis = pickedList
             .OrderBy(item => random.Next())
             .ToList();
         matchesFound = 0;
@@ -124,26 +124,26 @@
 
     }
 
-    string lastAnimalFound = string.Empty;
+    string lastEmojiFound = string.Empty;
     string lastDescription = string.Empty;
 
-    private void ButtonClick(string animal, string animalDescription)
+    private void ButtonClick(string emoji, string emojiDescription) //Kode for emoji trykking
     {
         if (timer.Enabled)
         {
             
 
-            if (lastAnimalFound == string.Empty)
+            if (lastEmojiFound == string.Empty)
             {
-                lastAnimalFound = animal;
-                lastDescription = animalDescription;
+                lastEmojiFound = emoji;
+                lastDescription = emojiDescription;
 
             }
-            else if ((lastAnimalFound == animal) && (animalDescription != lastDescription))
+            else if ((lastEmojiFound == emoji) && (emojiDescription != lastDescription))
             {
-                lastAnimalFound = string.Empty;
-                shuffledAnimals = shuffledAnimals
-                    .Select(a => a.Replace(animal, string.Empty))
+                lastEmojiFound = string.Empty;
+                shuffledEmojis = shuffledEmojis
+                    .Select(a => a.Replace(emoji, string.Empty))
                     .ToList();
                 matchesFound++;
                 if (matchesFound == 8)
@@ -155,18 +155,18 @@
             }
             else
             {
-                lastAnimalFound = string.Empty;
+                lastEmojiFound = string.Empty;
             }
         }
     }
 
-    private void startButton()
+    private void startButton() //startknapp
     {
         timer.Start();
         resultatMelding = "";
     }
 
-    private void Timer_Tick(Object source, ElapsedEventArgs e)
+    private void Timer_Tick(Object source, ElapsedEventArgs e) //timer
     {
         InvokeAsync(() =>
         {
