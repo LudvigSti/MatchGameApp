@@ -55,8 +55,33 @@
         "🐈", "🐈",
     };
 
+    List<string> foodEmoji = new List<string>
+    {
+        "🍕","🍕",
+        "🍔","🍔",
+        "🌭","🌭",
+        "🍟","🍟",
+        "🥓","🥓",
+        "🍗","🍗",
+        "🍙","🍙",
+        "🌮","🌮",
+    };
+
+    List<string> fruitEmoji = new List<string>{
+        "🍉","🍉",
+        "🍎","🍎",
+        "🍌","🍌",
+        "🍓","🍓",
+        "🍑","🍑",
+        "🍒","🍒",
+        "🍊","🍊",
+        "🍇","🍇",
+    };
+
     List<string> shuffledAnimals = new List<string>();
+    List<string> pickedList = new List<string>();
     int matchesFound = 0;
+    int randomListe = 0;
     Timer timer;
     int tenthsOfSecondsElapsed;
     string timeDisplay;
@@ -71,11 +96,24 @@
     private void SetUpGame()
     {
         Random random = new Random();
-        shuffledAnimals = animalEmoji
+
+        randomListe = random.Next(0,3);
+        if (randomListe == 0)
+        {
+            pickedList = animalEmoji;
+        }else if(randomListe == 1){
+            pickedList = foodEmoji;
+        }else if(randomListe == 2)
+        {
+            pickedList = fruitEmoji;
+        }
+
+        shuffledAnimals = pickedList
             .OrderBy(item => random.Next())
             .ToList();
         matchesFound = 0;
         tenthsOfSecondsElapsed = 0;
+        
     }
 
     string lastAnimalFound = string.Empty;
