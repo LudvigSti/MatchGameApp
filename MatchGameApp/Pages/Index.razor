@@ -40,6 +40,9 @@
     <div class="row">
         <h2>Time: @timeDisplay</h2>
     </div>
+    <div>
+        <h2>@resultatMelding</h2>
+    </div>
     <div class="row">
         <button @onclick="@(() => startButton())">Start spill!</button>
     </div>
@@ -88,6 +91,7 @@
     Timer timer;
     int tenthsOfSecondsElapsed;
     string timeDisplay;
+    string resultatMelding;
 
     protected override void OnInitialized()
     {
@@ -116,6 +120,7 @@
             .ToList();
         matchesFound = 0;
         tenthsOfSecondsElapsed = 200;
+        
 
     }
 
@@ -126,6 +131,7 @@
     {
         if (timer.Enabled)
         {
+            
 
             if (lastAnimalFound == string.Empty)
             {
@@ -143,7 +149,7 @@
                 if (matchesFound == 8)
                 {
                     timer.Stop();
-                    timeDisplay += " You Won! - Play Again?";
+                    resultatMelding = " You Won! - Play Again?";
                     SetUpGame();
                 }
             }
@@ -157,6 +163,7 @@
     private void startButton()
     {
         timer.Start();
+        resultatMelding = "";
     }
 
     private void Timer_Tick(Object source, ElapsedEventArgs e)
@@ -172,7 +179,7 @@
             else
             {
                 timer.Stop();
-                timeDisplay += " You Lost! - Play Again?";
+                resultatMelding = " You Lost! - Play Again?";
                 SetUpGame();
             }
             StateHasChanged();
